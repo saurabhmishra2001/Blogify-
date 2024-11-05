@@ -22,6 +22,12 @@ export default function PostForm({ post }) {
     const submit = async (data) => {
         setLoading(true); // Set loading to true
         try {
+            // Validate content length
+            const content = getValues("content");
+            if (typeof content !== 'string' || content.length > 259) {
+                throw new Error("Content must be a valid string and no longer than 259 characters.");
+            }
+
             let file;
             if (post) {
                 file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
@@ -55,6 +61,7 @@ export default function PostForm({ post }) {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+            alert(error.message); // Optional: Show an alert with the error message
         } finally {
             setLoading(false); // Reset loading state
         }
@@ -104,6 +111,7 @@ export default function PostForm({ post }) {
                 {errors.slug && <span className="text-red-500 text-sm">Slug is required</span>}
                 
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
+                {errors.content && <span className="text-red-500 text-sm">Content is required</span>}
             </div>
             <div className="flex-1 mb-4">
                 <Input
