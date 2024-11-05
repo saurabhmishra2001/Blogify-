@@ -1,4 +1,4 @@
-import { Container, Logo, LogoutBtn} from '../index'
+import {  Logo, LogoutBtn} from '../index'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState, useEffect, useRef } from 'react'
@@ -57,7 +57,7 @@ function Header() {
 
     return (
         
-            <Container className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
+            <nav className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo - Left side */}
                     <div className="flex-shrink-0">
@@ -235,7 +235,7 @@ function Header() {
                         )}
                     </ul>
                 </div>
-            </Container>
+            </nav>
     )
 }
 
