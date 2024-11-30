@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import appwriteSerive from '../appwrite/config'
 import { Container,PostCard } from '../components'
 import { useEffect, useState } from 'react'
+import RecentBlog from '../components/RecentBlogs';
 
 export default function Home(){
 
@@ -26,6 +27,7 @@ export default function Home(){
                             <h1 className='text-2xl font-bold hover:text-gray-500'>
                                 Login to read Posts
                             </h1>
+                            <RecentBlog />
                         </div>
                     </div>
                 </Container>
