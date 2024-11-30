@@ -15,7 +15,9 @@ function Signup() {
     const create = async(data) => {
         setError("");
         try {
+            console.log("hel;lo", data)
             const userData = await authService.createAccount(data);
+            console.log("hel;lo 1", userData)
 
             if (userData) {
                 const userData = await authService.getCurrentUser();
