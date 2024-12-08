@@ -137,8 +137,44 @@ export class Service{
             fileId
         )
     }
-}
 
+    async getPublicPosts() {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+            );
+        } catch (error) {
+            console.error("Appwrite service :: getPublicPosts :: error", error);
+            return null;
+        }
+    }
+
+    // Simplified method to get all posts without any queries
+    async getAllPosts() {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                [] // Empty array means no filters, showing all posts
+            );
+        } catch (error) {
+            console.error("Appwrite service :: getAllPosts :: error", error);
+            return {
+                documents: [] // Return empty array on error to prevent crashes
+            };
+        }
+    }
+
+    // Add these getter methods
+    get databaseId() {
+        return conf.appwriteDatabaseId;
+    }
+
+    get collectionId() {
+        return conf.appwriteCollectionId;
+    }
+}
 
 const service = new Service();
 export default service
