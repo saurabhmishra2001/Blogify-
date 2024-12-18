@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import appwriteService from '../appwrite/config';
+import PropTypes from 'prop-types';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 
-function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
+function FeaturedPost({ $id, title, featuredImage, content, $createdAt, author }) {
     // Function to strip HTML tags
     const stripHtml = (html) => {
         const tmp = document.createElement('div');
@@ -14,19 +15,19 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
 
     const cleanContent = stripHtml(content);
     const readTime = Math.ceil(cleanContent.split(' ').length / 200); // Estimate read time based on word count
-    const excerpt = cleanContent.slice(0, 100) + (cleanContent.length > 100 ? '...' : '');
-    const tags = ['Blog']; // You can make this dynamic based on your data
+    const excerpt = cleanContent.slice(0, 150) + (cleanContent.length > 150 ? '...' : '');
+    const tags = ['Featured', 'Latest']; // You can make this dynamic based on your data
 
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+        <Card className="overflow-hidden">
             <div className="relative aspect-video">
                 {featuredImage && (
                     <img
                         src={appwriteService.getFilePreview(featuredImage)}
                         alt={title}
-                        className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                        className="object-cover w-full h-full"
                         onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/800x400?text=Blog+Post';
+                            e.target.src = 'https://via.placeholder.com/1200x600?text=Featured+Post';
                         }}
                     />
                 )}
@@ -37,7 +38,7 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
                         <Badge key={index} variant="secondary">{tag}</Badge>
                     ))}
                 </div>
-                <h3 className="text-xl font-bold tracking-tight mb-2">
+                <h3 className="text-2xl font-bold tracking-tight mb-2">
                     <Link 
                         to={`/post/${$id}`} 
                         className="hover:text-primary transition-colors"
@@ -45,7 +46,7 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
                         {title}
                     </Link>
                 </h3>
-                <p className="text-muted-foreground mb-4">{excerpt}</p>
+                <div className="text-muted-foreground mb-4">{excerpt}</div>
             </CardContent>
             <CardFooter className="p-6 pt-0 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -74,4 +75,16 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
     );
 }
 
-export default PostCard;
+FeaturedPost.propTypes = {
+    $id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    featuredImage: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    $createdAt: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+        name: PropTypes.string,
+        profileImage: PropTypes.string
+    })
+};
+
+export default FeaturedPost; 

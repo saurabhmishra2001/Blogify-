@@ -89,16 +89,36 @@ export class Service{
     }
 
     // Get all the posts whose status is active
-    async getPosts(queries = [Query.equal('status','active')]){
+    async getPosts(queries = []) {
         try {
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                queries
-            )
+                [
+                    Query.orderDesc('$createdAt'),
+                    ...queries
+                ]
+            );
         } catch (error) {
-            console.log("Appwrite serive :: getPosts :: error", error.message);
-            throw error;
+            console.error("Appwrite service :: getPosts :: error", error);
+            return { documents: [] };
+        }
+    }
+
+    // Add a new method for public posts
+    async getPublicPosts() {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                [
+                    Query.equal('status', 'active'),
+                    Query.orderDesc('$createdAt')
+                ]
+            );
+        } catch (error) {
+            console.error("Appwrite service :: getPublicPosts :: error", error);
+            return { documents: [] };
         }
     }
 
@@ -138,19 +158,6 @@ export class Service{
         )
     }
 
-    async getPublicPosts() {
-        try {
-            return await this.databases.listDocuments(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-            );
-        } catch (error) {
-            console.error("Appwrite service :: getPublicPosts :: error", error);
-            return null;
-        }
-    }
-
-    // Simplified method to get all posts without any queries
     async getAllPosts() {
         try {
             return await this.databases.listDocuments(

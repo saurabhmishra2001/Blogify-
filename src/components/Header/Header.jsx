@@ -24,7 +24,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+      <div className="flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-2">
           <svg className="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/>
@@ -35,6 +35,9 @@ function Header() {
         <nav className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
             Home
+          </Link>
+          <Link to="/explore" className="text-sm font-medium hover:text-primary transition-colors">
+            Explore
           </Link>
           <Link to="/all-posts" className="text-sm font-medium hover:text-primary transition-colors">
             All Posts
@@ -79,18 +82,33 @@ function Header() {
               </DropdownMenu>
             </>
           ) : (
-            <>
+            <div className="flex items-center gap-4">
               <Link to="/login">
-                <Button variant="ghost" className="text-sm font-medium">
-                  Login
+                <Button 
+                  variant="ghost"
+                  className="font-medium px-6 py-2 hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="flex items-center gap-2">
+                    Login
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                  </span>
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button className="text-sm font-medium">
-                  Sign Up
+                <Button 
+                  className="font-medium px-6 py-2 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
+                >
+                  <span className="flex items-center gap-2">
+                    Sign Up
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </span>
                 </Button>
               </Link>
-            </>
+            </div>
           )}
         </nav>
 
@@ -109,13 +127,20 @@ function Header() {
 
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <div className="container mx-auto px-4 py-4 space-y-4">
+          <div className="px-4 py-4 space-y-4">
             <Link 
               to="/" 
               className="block text-foreground hover:text-primary transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
+            </Link>
+            <Link 
+              to="/explore" 
+              className="block text-foreground hover:text-primary transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Explore
             </Link>
             <Link 
               to="/all-posts" 
@@ -133,33 +158,41 @@ function Header() {
                 Add Post
               </Link>
             )}
-            {!authStatus ? (
-              <div className="space-y-2">
+            {!authStatus && (
+              <div className="space-y-4">
                 <Link 
                   to="/login" 
                   className="block w-full"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <Button variant="ghost" className="w-full">Login</Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-center font-medium hover:bg-primary/10"
+                  >
+                    <span className="flex items-center gap-2">
+                      Login
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                    </span>
+                  </Button>
                 </Link>
                 <Link 
                   to="/signup" 
                   className="block w-full"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <Button className="w-full">Sign Up</Button>
+                  <Button 
+                    className="w-full justify-center font-medium bg-gradient-to-r from-primary to-blue-600"
+                  >
+                    <span className="flex items-center gap-2">
+                      Sign Up
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </span>
+                  </Button>
                 </Link>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Link 
-                  to="/profile" 
-                  className="block text-foreground hover:text-primary transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Profile
-                </Link>
-                <LogoutBtn className="w-full text-left text-destructive hover:text-destructive/90" />
               </div>
             )}
           </div>

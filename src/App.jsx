@@ -27,18 +27,20 @@ function App() {
 
 
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-orange-200'>
-      <div className='w-full block'>
-        <Header />
+    <div className='min-h-screen flex flex-col bg-background'>
+      <Header />
+      
+      <main className="flex-1">
+        <Outlet />
+      </main>
 
-        <main>
-          <Outlet />
-        </main>
-
-        <Footer />
-      </div>
+      <Footer />
     </div>
-  ) : null
+  ) : (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
 }
 
 export default App
