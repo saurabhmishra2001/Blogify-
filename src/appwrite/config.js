@@ -181,6 +181,16 @@ export class Service{
     get collectionId() {
         return conf.appwriteCollectionId;
     }
+
+    // Add this method to your Service class
+    async getUserById(userId) {
+        try {
+            return await this.account.get(userId);
+        } catch (error) {
+            console.error("Appwrite service :: getUserById :: error", error);
+            return null;
+        }
+    }
 }
 
 const service = new Service();
