@@ -1,49 +1,55 @@
 import { Link } from 'react-router-dom'
-import Logo from '../Logo'
 
 function Footer() {
   return (
-    <footer className="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
-        <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-            <div className="sm:flex sm:items-center sm:justify-between">
-                <Link to="/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-                    <Logo width="100px" />
-                </Link>
-                
-                <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
-                    <li>
-                        <Link to="/about" className="hover:underline me-4 md:me-6">
-                            About
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/privacy-policy" className="hover:underline me-4 md:me-6">
-                            Privacy Policy
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/licensing" className="hover:underline me-4 md:me-6">
-                            Licensing
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/contact" className="hover:underline">
-                            Contact
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-            
-            <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-            
-            <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                © {new Date().getFullYear()}{" "}
-                <Link to="/" className="hover:underline">
-                    Blogify
-                </Link>
-                . All Rights Reserved.
-            </span>
+    <footer className="border-t bg-background/95">
+      <div className="py-8 md:py-12 px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center space-x-2">
+            <svg 
+              className="h-6 w-6 text-primary" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+            >
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/>
+            </svg>
+            <span className="font-semibold text-lg gradient-text">Blogify</span>
+          </div>
+          
+          <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+            <Link 
+              to="/about" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              About
+            </Link>
+            <Link 
+              to="/privacy" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link 
+              to="/terms" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              Terms of Service
+            </Link>
+            <Link 
+              to="/contact" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              Contact
+            </Link>
+          </nav>
         </div>
+        
+        <div className="mt-8 text-center text-sm text-muted-foreground">
+          © {new Date().getFullYear()} Blogify. All Rights Reserved.
+        </div>
+      </div>
     </footer>
   )
 }

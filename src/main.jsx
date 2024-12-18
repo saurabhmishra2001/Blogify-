@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { AuthLayout } from './components'
 
 import { Home, Login, Signup, AllPosts, AddPost, EditPost, Post } from './pages'
+import ExplorePage from './components/explore/Explore.jsx';
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,12 @@ const router = createBrowserRouter([
         {
             path: "/post/:slug",
             element: <Post />,
+        },
+        {
+            path: "/explore",
+            element: (
+                <ExplorePage />
+            ),
         },
         // {
         //     path:"/read-more/:slug",
