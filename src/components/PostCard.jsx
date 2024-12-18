@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'; // Add this import statement
 import appwriteService from '../appwrite/config';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { useSelector } from 'react-redux';
 
 function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
     // Function to strip HTML tags
@@ -16,6 +18,7 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
     const readTime = Math.ceil(cleanContent.split(' ').length / 200); // Estimate read time based on word count
     const excerpt = cleanContent.slice(0, 100) + (cleanContent.length > 100 ? '...' : '');
     const tags = ['Blog']; // You can make this dynamic based on your data
+    const userData = useSelector((state) => state.auth.userData);
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -50,13 +53,13 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
             <CardFooter className="p-6 pt-0 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8">
-                        {author?.profileImage ? (
-                            <AvatarImage src={author.profileImage} alt={author.name} />
+                        {userData?.profileImage ? (
+                            <AvatarImage src={userData.profileImage} alt={author.name} />
                         ) : (
-                            <AvatarFallback>{author?.name?.charAt(0) || 'A'}</AvatarFallback>
+                            <AvatarFallback>{userData?.name?.charAt(0) || 'A'}</AvatarFallback>
                         )}
                     </Avatar>
-                    <span className="text-sm font-medium">{author?.name || 'Anonymous'}</span>
+                    <span className="text-sm font-medium">{userData?.name || 'Anonymous'}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">
                     <time dateTime={new Date($createdAt).toISOString()}>
@@ -73,5 +76,12 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author }) {
         </Card>
     );
 }
-
+PostCard.propTypes = {
+    $id: PropTypes.string.isRequired, // Add validation for $id
+    title: PropTypes.string.isRequired,
+    featuredImage: PropTypes.string,
+    content: PropTypes.string.isRequired,
+    $createdAt: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
+};
 export default PostCard;
