@@ -401,3 +401,50 @@ input:focus, textarea:focus {
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.prose {
+    @apply text-foreground;
+}
+
+.prose img {
+    @apply rounded-lg my-8;
+}
+
+.prose p {
+    @apply mb-4;
+}
+
+.prose h2, .prose h3, .prose h4 {
+    @apply font-bold tracking-tight mt-8 mb-4;
+}
+
+.prose a {
+    @apply text-primary hover:underline;
+}
+
+.prose ul, .prose ol {
+    @apply my-6 ml-6;
+}
+
+.prose li {
+    @apply mb-2;
+}
+
+.prose blockquote {
+    @apply border-l-4 border-primary/20 pl-4 italic my-6;
+}
+
