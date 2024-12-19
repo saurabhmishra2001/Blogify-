@@ -8,7 +8,7 @@ const conf = {
 
     appwriteBucketId : String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
 
-    editorApi : String(import.meta.env.TINY_EDITOR_API),
+    editorApi : String(import.meta.env.VITE_TINY_EDITOR_API),
 }
 
 export default conf;
