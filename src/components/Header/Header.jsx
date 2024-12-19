@@ -50,7 +50,7 @@ function Header() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button variant="ghost" className="relative flex items-center gap-2 h-8 px-2 rounded-full">
                     <Avatar className="h-8 w-8">
                       {userData?.profilePicture ? (
                         <AvatarImage src={userData.profilePicture} alt={userData.name} />
@@ -58,6 +58,7 @@ function Header() {
                         <AvatarFallback>{userData?.name?.charAt(0) || 'U'}</AvatarFallback>
                       )}
                     </Avatar>
+                    <span className="text-sm font-medium">{userData?.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
