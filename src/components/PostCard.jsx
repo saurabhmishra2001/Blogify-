@@ -27,7 +27,7 @@ function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, aut
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full flex flex-col">
-            <div className="relative aspect-video ">
+            <div className="relative h-40">
                 {featuredImage && (
                     <img
                         src={appwriteService.getFilePreview(featuredImage)}
@@ -71,7 +71,7 @@ function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, aut
                     <span>{readTime} min read</span>
                 </div>
             </CardFooter>
-            <div className="p-6 flex justify-between">
+            <div className="p-6 flex justify-end">
                 <Link 
                     to={`/post/${$id}`} 
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
