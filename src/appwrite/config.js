@@ -16,47 +16,51 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    // Create a new Post
-    async createPost({title,slug,content,featuredImage,status, userId}){
-        try {
-            return await this.databases.createDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug,
-                {
-                    title,
-                    content,
-                    featuredImage,
-                    status,
-                    userId
-                }
-            )
-        } catch (error) {
-            console.log("Appwrite serive :: createPost :: error",error.message);
-            throw error;
-        }
+// Create a new Post
+async createPost({ title, slug, content, featuredImage, status, userId, authorName }) {
+    try {
+        return await this.databases.createDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteCollectionId,
+            slug,
+            {
+                title,
+                content,
+                featuredImage,
+                status,
+                userId,
+                authorName // Add authorName here
+            }
+        );
+    } catch (error) {
+        console.log("Appwrite service :: createPost :: error", error.message);
+        throw error;
     }
+}
 
 
-    // Update the existing post
-    async updatePost(slug,{title,content,featuredImage,status}){
-        try {
-            return await this.databases.updateDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug,
-                {
-                    title,
-                    content,
-                    featuredImage,
-                    status
-                }
-            )
-        } catch (error) {
-            console.log("Appwrite Service : updatePost : error",error.message);
-            throw error
-        }
+
+  // Update the existing post
+async updatePost(slug, { title, content, featuredImage, status, authorName }) {
+    try {
+        return await this.databases.updateDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteCollectionId,
+            slug,
+            {
+                title,
+                content,
+                featuredImage,
+                status,
+                authorName // Allow updating the author name
+            }
+        );
+    } catch (error) {
+        console.log("Appwrite Service : updatePost : error", error.message);
+        throw error;
     }
+}
+
 
     // Delete the post with the given slug
     async deletePost(slug){
@@ -75,52 +79,53 @@ export class Service{
 
 
     // Get the post with the given slug
-    async getPost(slug){
-        try {
-            return await this.databases.getDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug
-            )
-        } catch (error) {
-            console.log("Appwrite Service : getPost : error",error.message);
-            return false
-        }
+   // Get the post with the given slug
+async getPost(slug) {
+    try {
+        return await this.databases.getDocument(
+            conf.appwriteDatabaseId,
+            conf.appwriteCollectionId,
+            slug
+        );
+    } catch (error) {
+        console.log("Appwrite Service : getPost : error", error.message);
+        return false;
     }
+}
 
-    // Get all the posts whose status is active
-    async getPosts(queries = []) {
-        try {
-            return await this.databases.listDocuments(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                [
-                    Query.orderDesc('$createdAt'),
-                    ...queries
-                ]
-            );
-        } catch (error) {
-            console.error("Appwrite service :: getPosts :: error", error);
-            return { documents: [] };
-        }
+   // Get all the posts whose status is active
+async getPosts(queries = []) {
+    try {
+        return await this.databases.listDocuments(
+            conf.appwriteDatabaseId,
+            conf.appwriteCollectionId,
+            [
+                Query.orderDesc('$createdAt'),
+                ...queries
+            ]
+        );
+    } catch (error) {
+        console.error("Appwrite service :: getPosts :: error", error);
+        return { documents: [] };
     }
+}
 
-    // Add a new method for public posts
-    async getPublicPosts() {
-        try {
-            return await this.databases.listDocuments(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                [
-                    Query.equal('status', 'active'),
-                    Query.orderDesc('$createdAt')
-                ]
-            );
-        } catch (error) {
-            console.error("Appwrite service :: getPublicPosts :: error", error);
-            return { documents: [] };
-        }
+// Add a new method for public posts
+async getPublicPosts() {
+    try {
+        return await this.databases.listDocuments(
+            conf.appwriteDatabaseId,
+            conf.appwriteCollectionId,
+            [
+                Query.equal('status', 'active'),
+                Query.orderDesc('$createdAt')
+            ]
+        );
+    } catch (error) {
+        console.error("Appwrite service :: getPublicPosts :: error", error);
+        return { documents: [] };
     }
+}
 
     // File Upload Service 
     async uploadFile(file){
