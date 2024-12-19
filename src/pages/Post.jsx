@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
                     appwriteService.getUserById(post.userId).then((userData) => {
                         setPost({ 
                             ...post, 
-                            authorName: userData.name,
                             author: userData
                         });
                     });
@@ -52,12 +51,12 @@ import PropTypes from 'prop-types';
                         <div className="flex items-center space-x-2">
                             <Avatar className="h-8 w-8">
                                 {post.author?.profileImage ? (
-                                    <AvatarImage src={post.author.profileImage} alt={post.authorName || 'User'} />
+                                    <AvatarImage src={post.author.profileImage} alt={post?.authorName || 'User'} />
                                 ) : (
-                                    <AvatarFallback>{post.authorName?.charAt(0) || 'A'}</AvatarFallback>
+                                    <AvatarFallback>{post?.authorName?.charAt(0) || 'A'}</AvatarFallback>
                                 )}
                             </Avatar>
-                            <span className="text-sm font-medium">{post.authorName || 'Anonymous'}</span>
+                            <span className="text-sm font-medium">{post?.authorName || 'Anonymous'}</span>
                         </div>
                         <div className="text-sm">
                             <time dateTime={new Date(post.$createdAt).toISOString()}>
