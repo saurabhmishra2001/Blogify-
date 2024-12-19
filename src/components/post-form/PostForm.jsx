@@ -8,6 +8,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { RTE } from "../index";
+import PropTypes from 'prop-types';
 
 export default function PostForm({ post }) {
     const { register, handleSubmit, watch, setValue, control, getValues, formState: { errors, isSubmitting } } = useForm({
@@ -20,7 +21,7 @@ export default function PostForm({ post }) {
     });
 
     const navigate = useNavigate();
-    const userData = useSelector(state => state.auth.userData);
+    const userData = useSelector(state => state.auth.userData); // Get logged-in user data
     const [contentError, setContentError] = useState('');
 
     const submit = async (data) => {
@@ -48,6 +49,9 @@ export default function PostForm({ post }) {
 
             setContentError(''); // Clear error if validation passes
 
+            // Automatically use logged-in user's name as the author name
+            const authorName = userData.name || ''; // Fallback to empty string if userData is not available
+
             if (post) {
                 // Update existing post
                 const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
@@ -57,6 +61,7 @@ export default function PostForm({ post }) {
 
                 const dbPost = await appwriteService.updatePost(post.$id, {
                     ...data,
+                    authorName, // Add authorName to the post data
                     featuredImage: file ? file.$id : undefined
                 });
 
@@ -73,6 +78,7 @@ export default function PostForm({ post }) {
                     const dbPost = await appwriteService.createPost({
                         ...data,
                         userId: userData.$id,
+                        authorName, // Automatically use logged-in user's name as authorName
                     });
 
                     if (dbPost) {
@@ -225,3 +231,14 @@ function stripHtml(html) {
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
 }
+
+// Add prop types validation
+PostForm.propTypes = {
+    post: PropTypes.shape({
+        title: PropTypes.string,
+        $id: PropTypes.string,
+        content: PropTypes.string,
+        status: PropTypes.string,
+        featuredImage: PropTypes.string,
+    }),
+};
