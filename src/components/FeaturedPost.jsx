@@ -28,7 +28,7 @@ function FeaturedPost({ $id, title, featuredImage, content, $createdAt, authorNa
 
     return (
         <Card className="overflow-hidden">
-            <div className="relative aspect-video">
+            <div className="relative h-48">
                 {featuredImage && (
                     <img
                         src={appwriteService.getFilePreview(featuredImage)}
@@ -55,6 +55,12 @@ function FeaturedPost({ $id, title, featuredImage, content, $createdAt, authorNa
                     </Link>
                 </h3>
                 <div className="text-muted-foreground mb-4">{excerpt}</div>
+                <Link 
+                    to={`/post/${$id}`} 
+                    className="text-primary font-semibold hover:underline"
+                >
+                    Read More
+                </Link>
             </CardContent>
             <CardFooter className="p-6 pt-0 flex items-center justify-between">
                 <div className="flex items-center space-x-2">

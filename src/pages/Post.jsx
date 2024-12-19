@@ -5,8 +5,10 @@ import { Button } from "../components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import PropTypes from 'prop-types';
 
-export default function Post() {
+ function Post({ $id, title, featuredImage, content, $createdAt, tags }) {
+    
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
@@ -18,7 +20,11 @@ export default function Post() {
             appwriteService.getPost(slug).then((post) => {
                 if (post) {
                     appwriteService.getUserById(post.userId).then((userData) => {
-                        setPost({ ...post, userData });
+                        setPost({ 
+                            ...post, 
+                            authorName: userData.name,
+                            author: userData
+                        });
                     });
                 } else navigate("/");
             });
@@ -43,15 +49,15 @@ export default function Post() {
                     </h1>
                     
                     <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-6">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center space-x-2">
                             <Avatar className="h-8 w-8">
-                                {post.userData?.profileImage ? (
-                                    <AvatarImage src={post.userData.profileImage} alt={post.userData.name} />
+                                {post.author?.profileImage ? (
+                                    <AvatarImage src={post.author.profileImage} alt={post.authorName || 'User'} />
                                 ) : (
-                                    <AvatarFallback>{post.userData?.name?.charAt(0) || 'A'}</AvatarFallback>
+                                    <AvatarFallback>{post.authorName?.charAt(0) || 'A'}</AvatarFallback>
                                 )}
                             </Avatar>
-                            <span className="text-sm font-medium">{post.userData?.name || 'Anonymous'}</span>
+                            <span className="text-sm font-medium">{post.authorName || 'Anonymous'}</span>
                         </div>
                         <div className="text-sm">
                             <time dateTime={new Date(post.$createdAt).toISOString()}>
@@ -107,3 +113,21 @@ export default function Post() {
         </div>
     );
 }
+
+Post.propTypes = {
+    $id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    featuredImage: PropTypes.string,
+    content: PropTypes.string.isRequired,
+    $createdAt: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.string),
+    authorName: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+        name: PropTypes.string,
+        profileImage: PropTypes.string,
+    }),
+    isAuthor: PropTypes.bool, // Whether the logged-in user is the author
+};
+
+export default Post;
+
