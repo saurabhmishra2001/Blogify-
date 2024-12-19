@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import appwriteService from '../appwrite/config';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { toast } from 'react-toastify'; // For toast notifications
+import { useSelector } from 'react-redux';
 
 function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, authorName, author }) {
+    const navigate = useNavigate();
+
     // Function to strip HTML tags
     const stripHtml = (html) => {
         const tmp = document.createElement('div');
@@ -16,6 +20,7 @@ function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, aut
     const cleanContent = stripHtml(content);
     const readTime = Math.ceil(cleanContent.split(' ').length / 200); // Estimate read time based on word count
     const excerpt = cleanContent.slice(0, 150) + (cleanContent.length > 150 ? '...' : '');
+    const authStatus = useSelector(state => state.auth.status);
 
     const formattedDate = $createdAt
         ? new Date($createdAt).toLocaleDateString('en-US', {
@@ -24,6 +29,17 @@ function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, aut
             day: 'numeric',
         })
         : 'Unknown Date';
+
+    const handleReadMore = () => {
+        if (authStatus) {
+            // If the user is logged in, navigate to the post page
+            navigate(`/post/${$id}`);
+        } else {
+            // If the user is not logged in, show a toast and redirect to the login page
+            toast.info('Please log in to read the post!');
+            navigate('/login'); // Redirect to login page
+        }
+    };
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full flex flex-col">
@@ -72,12 +88,12 @@ function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, aut
                 </div>
             </CardFooter>
             <div className="p-6 flex justify-end">
-                <Link 
-                    to={`/post/${$id}`} 
+                <button
+                    onClick={handleReadMore}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
                     Read More
-                </Link>
+                </button>
             </div>
         </Card>
     );
@@ -90,12 +106,12 @@ UnifiedCard.propTypes = {
     content: PropTypes.string.isRequired,
     $createdAt: PropTypes.string.isRequired,
     tags: PropTypes.arrayOf(PropTypes.string),
-    authorName: PropTypes.string.isRequired,
+    authorName: PropTypes.string,
     author: PropTypes.shape({
         name: PropTypes.string,
         profileImage: PropTypes.string,
     }),
-    isAuthor: PropTypes.bool, // Whether the logged-in user is the author
+    authStatus: PropTypes.bool.isRequired, // Add authStatus to prop types
 };
 
 export default UnifiedCard;
