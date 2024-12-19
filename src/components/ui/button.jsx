@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 
 export function Button({ variant = 'default', size = 'default', className = '', children, ...props }) {
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50';
@@ -21,4 +21,11 @@ export function Button({ variant = 'default', size = 'default', className = '', 
       {children}
     </button>
   );
-} 
+}
+
+Button.propTypes = {
+  variant: PropTypes.string,
+  size: PropTypes.string,
+  className: PropTypes.string,
+  children: PropTypes.node,
+}; 

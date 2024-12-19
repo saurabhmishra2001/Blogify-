@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types'; // Add this import statement
+import PropTypes from 'prop-types';
 import appwriteService from '../appwrite/config';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 
-function PostCard({ $id, title, featuredImage, content, $createdAt, author, authorName }) {
+function UnifiedCard({ $id, title, featuredImage, content, $createdAt, tags, authorName, author }) {
     // Function to strip HTML tags
     const stripHtml = (html) => {
         const tmp = document.createElement('div');
@@ -15,8 +15,7 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author, auth
 
     const cleanContent = stripHtml(content);
     const readTime = Math.ceil(cleanContent.split(' ').length / 200); // Estimate read time based on word count
-    const excerpt = cleanContent.slice(0, 100) + (cleanContent.length > 100 ? '...' : '');
-    const tags = ['Blog']; // You can make this dynamic based on your data
+    const excerpt = cleanContent.slice(0, 150) + (cleanContent.length > 150 ? '...' : '');
 
     const formattedDate = $createdAt
         ? new Date($createdAt).toLocaleDateString('en-US', {
@@ -24,33 +23,30 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author, auth
             month: 'long',
             day: 'numeric',
         })
-        : 'Unknown Date'; // Fallback for invalid/missing dates
+        : 'Unknown Date';
 
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative aspect-video">
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow w-full flex flex-col">
+            <div className="relative aspect-video ">
                 {featuredImage && (
                     <img
                         src={appwriteService.getFilePreview(featuredImage)}
                         alt={title}
                         className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                         onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/800x400?text=Blog+Post';
+                            e.target.src = 'https://via.placeholder.com/800x400?text=Post';
                         }}
                     />
                 )}
             </div>
-            <CardContent className="p-6">
+            <CardContent className="p-6 flex-grow">
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {tags.map((tag, index) => (
+                    {tags?.map((tag, index) => (
                         <Badge key={index} variant="secondary">{tag}</Badge>
                     ))}
                 </div>
                 <h3 className="text-xl font-bold tracking-tight mb-2">
-                    <Link 
-                        to={`/post/${$id}`} 
-                        className="hover:text-primary transition-colors"
-                    >
+                    <Link to={`/post/${$id}`} className="hover:text-primary transition-colors">
                         {title}
                     </Link>
                 </h3>
@@ -62,33 +58,44 @@ function PostCard({ $id, title, featuredImage, content, $createdAt, author, auth
                         {author?.profileImage ? (
                             <AvatarImage src={author.profileImage} alt={authorName || 'User'} />
                         ) : (
-                            <AvatarFallback>
-                                {authorName?.charAt(0) || 'A'}
-                            </AvatarFallback>
+                            <AvatarFallback>{authorName?.charAt(0) || 'A'}</AvatarFallback>
                         )}
                     </Avatar>
                     <span className="text-sm font-medium">{authorName || 'Anonymous'}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">
-                    <time dateTime={new Date($createdAt).toISOString()}>
+                    <time dateTime={$createdAt ? new Date($createdAt).toISOString() : undefined}>
                         {formattedDate}
                     </time>
                     <span className="mx-1">•</span>
                     <span>{readTime} min read</span>
                 </div>
             </CardFooter>
+            <div className="p-6 flex justify-between">
+                <Link 
+                    to={`/post/${$id}`} 
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                    Read More
+                </Link>
+            </div>
         </Card>
     );
 }
 
-PostCard.propTypes = {
+UnifiedCard.propTypes = {
     $id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     featuredImage: PropTypes.string,
     content: PropTypes.string.isRequired,
     $createdAt: PropTypes.string.isRequired,
-    author: PropTypes.object.isRequired,
-    authorName: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+    authorName: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+        name: PropTypes.string,
+        profileImage: PropTypes.string,
+    }),
+    isAuthor: PropTypes.bool, // Whether the logged-in user is the author
 };
 
-export default PostCard;
+export default UnifiedCard;

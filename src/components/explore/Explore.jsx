@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Header, Footer, PostCard } from '..';
+import { PostCard } from '..';
 import { Newsletter } from './Newsletter';
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -33,13 +33,14 @@ export default function ExplorePage() {
         fetchPosts();
     }, [authStatus]);
 
-    const handleSearch = () => {
-        const filtered = posts.filter(post => 
+    // Update filtered posts dynamically as the user types
+    useEffect(() => {
+        const filtered = posts.filter(post =>
             post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             post.content.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredPosts(filtered);
-    };
+    }, [searchQuery, posts]); // Depend on searchQuery and posts
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -53,10 +54,9 @@ export default function ExplorePage() {
                             placeholder="Search articles..." 
                             className="max-w-sm"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                            onChange={(e) => setSearchQuery(e.target.value)} // Update search query dynamically
                         />
-                        <Button onClick={handleSearch}>
+                        <Button onClick={() => {}}>
                             <svg 
                                 className="h-4 w-4 mr-2" 
                                 fill="none" 
@@ -93,4 +93,4 @@ export default function ExplorePage() {
             </main>
         </div>
     );
-} 
+}

@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { PostCard } from '../components';
 import appwriteService from '../appwrite/config';
-import { useSelector } from 'react-redux';
 
 export default function AllPosts() {
     const [posts, setPosts] = useState([]);
-    const userData = useSelector((state) => state.auth.userData); // Get logged-in user data
 
     useEffect(() => {
         appwriteService.getPosts([]).then((response) => {
@@ -28,16 +26,15 @@ export default function AllPosts() {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
-                        {posts.map((post) => (
-                            <div key={post.$id} className="w-full">
-                                <PostCard
-                                    {...post}
-                                    isAuthor={userData?.name === post.authorName} // Check if the logged-in user is the author
-                                />
-                            </div>
-                        ))}
+                    <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+                        {
+                            posts.map((post) => (
+                                <PostCard key={post.$id} {...post} />
+                            ))
+                        }
+
                     </div>
+
                 )}
             </div>
         </div>
