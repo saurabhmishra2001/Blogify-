@@ -116,7 +116,7 @@ export default function Home() {
                                 Discover insightful articles, share your expertise, and connect with a community of passionate writers and readers.
                             </p>
                             <div className="flex justify-center gap-6">
-                                <Link to="/explore">
+                                <Link to={authStatus ? "/explore" : "/signup"}>
                                     <Button 
                                         size="lg" 
                                         className="font-medium px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
@@ -148,7 +148,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                {featuredPost && (
+                {authStatus && featuredPost &&(
                     <section className="container py-16">
                         <h2 className="text-3xl font-bold tracking-tight mb-8 gradient-text">
                             Featured Article
