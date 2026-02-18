@@ -18,6 +18,7 @@ export function DropdownMenu({ children }) {
   return (
     <div ref={dropdownRef} className="relative">
       {React.Children.map(children, child => {
+        if (!React.isValidElement(child)) return child;
         if (child.type === DropdownMenuTrigger) {
           return React.cloneElement(child, { onClick: () => setIsOpen(!isOpen) });
         }
@@ -30,17 +31,19 @@ export function DropdownMenu({ children }) {
   );
 }
 
-export function DropdownMenuTrigger({ children, asChild, ...props }) {
-  if (asChild) {
-    return React.cloneElement(children, props);
+// asChild: if true, clones the single child and passes the onClick to it
+export function DropdownMenuTrigger({ children, asChild, onClick, ...props }) {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, { onClick, ...props });
   }
-  return <button {...props}>{children}</button>;
+  return <button onClick={onClick} {...props}>{children}</button>;
 }
 
-export function DropdownMenuContent({ children, align = 'end', className = '', ...props }) {
+// forceMount is a Radix UI concept — we just ignore it here
+export function DropdownMenuContent({ children, align = 'end', className = '', forceMount, ...props }) {
   return (
-    <div 
-      className={`absolute ${align === 'end' ? 'right-0' : 'left-0'} mt-2 w-56 rounded-md bg-background border shadow-lg dark:bg-popover dark:border-border focus:outline-none ${className}`} 
+    <div
+      className={`absolute z-50 ${align === 'end' ? 'right-0' : 'left-0'} mt-2 w-56 rounded-xl bg-background border border-white/10 shadow-2xl backdrop-blur-xl focus:outline-none ${className}`}
       {...props}
     >
       {children}
@@ -48,12 +51,17 @@ export function DropdownMenuContent({ children, align = 'end', className = '', .
   );
 }
 
-export function DropdownMenuItem({ children, className = '', ...props }) {
+// asChild: if true, renders the child element with merged styles instead of a wrapper div
+export function DropdownMenuItem({ children, className = '', asChild, ...props }) {
+  const itemClass = `px-3 py-2 text-sm text-foreground hover:bg-white/10 hover:text-white cursor-pointer rounded-md transition-colors ${className}`;
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      className: `${itemClass} ${children.props.className || ''}`.trim(),
+      ...props
+    });
+  }
   return (
-    <div 
-      className={`px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer ${className}`} 
-      {...props}
-    >
+    <div className={itemClass} {...props}>
       {children}
     </div>
   );
@@ -61,8 +69,8 @@ export function DropdownMenuItem({ children, className = '', ...props }) {
 
 export function DropdownMenuLabel({ children, className = '', ...props }) {
   return (
-    <div 
-      className={`px-4 py-2 text-sm font-semibold text-foreground ${className}`} 
+    <div
+      className={`px-2 py-1.5 text-sm font-semibold text-foreground ${className}`}
       {...props}
     >
       {children}
@@ -71,5 +79,5 @@ export function DropdownMenuLabel({ children, className = '', ...props }) {
 }
 
 export function DropdownMenuSeparator() {
-  return <div className="border-t border-border my-1" />;
-} 
+  return <div className="border-t border-white/10 my-1" />;
+}

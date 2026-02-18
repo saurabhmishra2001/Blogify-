@@ -1,12 +1,9 @@
-import {  PostForm } from "../components";
+import { PostForm } from "../components";
 
-
-export default function AddPost(){
-
-    return(
+export default function AddPost() {
+    return (
         <div className="py-8">
-          
-                <PostForm/>
+            <PostForm />
         </div>
-    )
+    );
 }

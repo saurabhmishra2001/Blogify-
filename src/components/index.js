@@ -12,6 +12,7 @@ import PostForm from './post-form/PostForm'
 import PostCard from './PostCard'
 import AuthLayout from './AuthLayout'
 import FeaturedPost from './FeaturedPost'
+import LikeBtn from './LikeBtn'
 
 export {
     Header,
@@ -27,5 +28,6 @@ export {
     PostForm,
     PostCard,
     AuthLayout,
-    FeaturedPost
+    FeaturedPost,
+    LikeBtn
 }
