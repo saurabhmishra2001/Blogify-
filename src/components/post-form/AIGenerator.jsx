@@ -5,18 +5,6 @@ import { Label } from "../ui/label";
 import appwriteService from '../../appwrite/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 
-// Load Puter.js SDK dynamically (free AI image generation, no API key needed)
-function loadPuterScript() {
-    return new Promise((resolve) => {
-        if (window.puter) { resolve(window.puter); return; }
-        const script = document.createElement('script');
-        script.src = 'https://js.puter.com/v2/';
-        script.onload = () => resolve(window.puter);
-        script.onerror = () => resolve(null);
-        document.head.appendChild(script);
-    });
-}
-
 // Convert a data URL to a Blob
 function dataURLtoBlob(dataURL) {
     const [header, data] = dataURL.split(',');
@@ -27,38 +15,14 @@ function dataURLtoBlob(dataURL) {
     return new Blob([arr], { type: mime });
 }
 
-// Generate a topic-relevant featured image using Puter.js (Nano Banana / Gemini)
+// Generate a featured image for the blog post.
+// Puter.js is NOT used here — it requires users to be logged into puter.com,
+// which causes 401 errors on deployed sites. We use Picsum Photos instead:
+// always available, no auth, no CORS, beautiful high-quality photos.
 async function generateAndUploadImage(topic) {
     const seed = Math.floor(Math.random() * 999999);
 
-    // Strategy 1: Puter.js — free AI image generation, no API key, no CORS issues
-    try {
-        const puter = await loadPuterScript();
-        if (puter) {
-            const prompt = `A professional, cinematic blog featured image about: "${topic}". 
-                Photorealistic, high quality, 16:9 landscape format, vibrant colors, no text or watermarks.`;
-
-            // Uses Gemini (Nano Banana) model — returns HTMLImageElement with data: URL
-            const imgEl = await puter.ai.txt2img(prompt, {
-                provider: 'gemini',
-                model: 'gemini-2.5-flash-image-preview',
-                ratio: { w: 1280, h: 720 }
-            });
-
-            if (imgEl?.src?.startsWith('data:')) {
-                const blob = dataURLtoBlob(imgEl.src);
-                const file = new File([blob], `ai-featured-${seed}.jpg`, { type: blob.type });
-                const uploaded = await appwriteService.uploadFile(file);
-                if (uploaded) {
-                    return { fileId: uploaded.$id, previewUrl: appwriteService.getFilePreview(uploaded.$id) };
-                }
-            }
-        }
-    } catch (e) {
-        console.warn('Puter.js image generation failed, trying fallback:', e.message);
-    }
-
-    // Strategy 2: Picsum Photos — random beautiful photo, always works, no CORS
+    // Strategy 1: Picsum Photos — random beautiful photo, always works, no auth, no CORS
     try {
         const imgRes = await fetch(`https://picsum.photos/seed/${seed}/1280/720`);
         if (imgRes.ok) {
@@ -72,10 +36,10 @@ async function generateAndUploadImage(topic) {
             }
         }
     } catch (e) {
-        console.warn('Picsum fallback failed:', e.message);
+        console.warn('Picsum image fetch failed:', e.message);
     }
 
-    console.warn('All image strategies failed — post will publish without a featured image.');
+    console.warn('Image generation failed — post will publish without a featured image.');
     return null;
 }
 
