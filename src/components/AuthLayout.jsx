@@ -20,5 +20,9 @@ export default function Protected({children,authentication = true}){
         setLoader(false)
 
     },[authStatus,navigate,authentication])
-    return loader ? <h1>Loading...</h1> : <>{children}</>
+    return loader ? (
+        <div className="min-h-screen flex items-center justify-center bg-background/50 backdrop-blur-sm">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary shadow-lg shadow-primary/20"></div>
+        </div>
+    ) : <>{children}</>
 }

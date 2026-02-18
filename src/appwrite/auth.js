@@ -47,8 +47,11 @@ export class AuthService{
         try{
             return await this.account.get();
         }catch(error){
-            console.log("AppWrite auth.js : getCurrentUser",error.message);
-            //throw error;
+            // This error is expected when no user is logged in (guest role)
+            // Silently return null instead of logging to console
+            if (!error.message?.includes('missing scopes')) {
+                console.log("AppWrite auth.js : getCurrentUser", error.message);
+            }
         }
         return null;
     }

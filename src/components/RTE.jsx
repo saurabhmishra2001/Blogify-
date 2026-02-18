@@ -46,7 +46,7 @@ export default function RTE({ name, control, label, defaultValue = '' }) {
                             ],
                             toolbar:
                                 "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
-                            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
+                            content_style: "body { font-family:Inter,ui-sans-serif,system-ui,sans-serif; font-size:16px; line-height:1.6; color:#333 } @media (prefers-color-scheme: dark) { body { background-color: #000; color: #fff } }"
                         }}
                         onEditorChange={onChange}
                     />

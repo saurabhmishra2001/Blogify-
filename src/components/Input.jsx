@@ -1,25 +1,24 @@
-// forwardRef is a hook used for passing the ref to the child component. It is used to pass the ref to the input element in the Input component.
 import { forwardRef, useId } from "react";
 
-// Wrap the function with forwardRef to pass the ref to the Input element
 const Input = forwardRef(function Input({
     label,
     type = "text",
     className = "",
     ...props
 }, ref) {
-    const id = useId();  // To generate a unique id for the input element
-    
+    const id = useId();
+
     return (
         <div className="w-full">
             {label && <label
-                className="inline-block mb-1 pl-1"
+                className="inline-block mb-1 pl-1 text-sm font-medium text-foreground"
                 htmlFor={id}>
                 {label}
             </label>}
 
-            <input type={type}
-                className={`${className} px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full`}
+            <input
+                type={type}
+                className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
                 ref={ref}
                 {...props}
                 id={id}

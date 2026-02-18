@@ -21,8 +21,10 @@ export default function Home() {
                 
                 if (response?.documents?.length > 0) {
                     setFeaturedPost(response.documents[0]);
-                    setRecentPosts(response.documents.slice(1, 4));
+                    setRecentPosts(response.documents.slice(1));
                     setPosts(response.documents);
+                } else {
+                    setPosts([]); 
                 }
             } catch (error) {
                 console.error("Error fetching posts:", error);
@@ -35,162 +37,104 @@ export default function Home() {
 
     if (posts.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col">
-                <main className="flex-1">
-                    <section className="bg-gradient-to-br from-primary/20 via-background to-secondary/20 py-20">
-                        <div className="container">
-                            <div className="text-center max-w-3xl mx-auto">
-                                <h1 className="text-5xl font-bold tracking-tight mb-6 gradient-text">
-                                    Welcome to Blogify
-                                </h1>
-                                <p className="text-xl text-muted-foreground mb-8">
-                                    {authStatus 
-                                        ? "No posts found. Be the first to share your thoughts!"
-                                        : "Join our community to start reading and writing amazing articles."}
-                                </p>
-                                <div className="flex justify-center gap-6">
-                                    {authStatus ? (
-                                        <Link to="/add-post">
-                                            <Button 
-                                                size="lg" 
-                                                className="font-medium px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
-                                            >
-                                                <span className="flex items-center gap-2">
-                                                    Create First Post
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                                    </svg>
-                                                </span>
-                                            </Button>
-                                        </Link>
-                                    ) : (
-                                        <>
-                                            <Link to="/login">
-                                                <Button 
-                                                    size="lg" 
-                                                    variant="ghost"
-                                                    className="font-medium px-8 py-6 hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-                                                >
-                                                    <span className="flex items-center gap-2">
-                                                        Login
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                                        </svg>
-                                                    </span>
-                                                </Button>
-                                            </Link>
-                                            <Link to="/signup">
-                                                <Button 
-                                                    size="lg" 
-                                                    className="font-medium px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
-                                                >
-                                                    <span className="flex items-center gap-2">
-                                                        Sign Up
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                        </svg>
-                                                    </span>
-                                                </Button>
-                                            </Link>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </main>
+            <div className="min-h-screen flex flex-col justify-center items-center bg-black text-center px-4 relative overflow-hidden">
+                <div className="absolute inset-0 mesh-bg opacity-50 z-0"></div>
+                <div className="relative z-10 max-w-4xl space-y-6 animate-fade-in-up">
+                    <h1 className="text-6xl md:text-8xl font-heading font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/40 pb-4">
+                        Thinking, <br /> Evolved.
+                    </h1>
+                    <p className="text-xl md:text-2xl text-slate-400 font-light max-w-2xl mx-auto leading-relaxed">
+                        A curated digital space for stories that matter. Join the next generation of writers and readers.
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                        {authStatus ? (
+                            <Link to="/add-post">
+                                <Button size="lg" className="h-14 px-8 text-lg rounded-full bg-white text-black hover:bg-slate-200 transition-all font-semibold">
+                                    Start Writing
+                                </Button>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link to="/signup">
+                                    <Button size="lg" className="h-14 px-10 text-lg rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-primary/20 transition-all font-semibold">
+                                        Get Started
+                                    </Button>
+                                </Link>
+                                <Link to="/login">
+                                    <Button size="lg" variant="ghost" className="h-14 px-10 text-lg rounded-full text-slate-300 hover:text-white hover:bg-white/10 font-semibold">
+                                        Sign In
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <main className="flex-1">
-                <section className="bg-gradient-to-br from-primary/20 via-background to-secondary/20 py-20">
-                    <div className="container">
-                        <div className="text-center max-w-3xl mx-auto">
-                            <h1 className="text-5xl font-bold tracking-tight mb-6 gradient-text animate-fade-in">
-                                Welcome to Blogify
-                            </h1>
-                            <p className="text-xl text-muted-foreground mb-12">
-                                Discover insightful articles, share your expertise, and connect with a community of passionate writers and readers.
-                            </p>
-                            <div className="flex justify-center gap-6">
-                                <Link to={authStatus ? "/explore" : "/signup"}>
-                                    <Button 
-                                        size="lg" 
-                                        className="font-medium px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
-                                    >
-                                        <span className="flex items-center gap-2">
-                                            Explore Articles
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                            </svg>
-                                        </span>
-                                    </Button>
-                                </Link>
-                                <Link to={authStatus ? "/add-post" : "/signup"}>
-                                    <Button 
-                                        size="lg" 
-                                        variant="outline" 
-                                        className="font-medium px-8 py-6 border-2 hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-                                    >
-                                        <span className="flex items-center gap-2">
-                                            Start Writing
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                            </svg>
-                                        </span>
-                                    </Button>
-                                </Link>
+        <div className="min-h-screen flex flex-col w-full bg-background animate-fade-in pb-20 pt-24">
+            <div className="container max-w-7xl px-4 md:px-6">
+                
+                {/* Header Section */}
+                <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <h1 className="text-4xl md:text-6xl font-heading font-bold tracking-tighter text-white mb-2">
+                             Featured <span className="text-slate-500">Stories</span>
+                        </h1>
+                        <p className="text-slate-400 text-lg font-light">Curated top picks for this week.</p>
+                    </div>
+                </div>
+
+                {/* Bento Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[400px]">
+                    
+                    {/* Featured Item - Large 2x2 */}
+                    {featuredPost && (
+                        <div className="md:col-span-2 md:row-span-2 rounded-3xl overflow-hidden glass-card shadow-2xl animate-fade-in-up">
+                            <FeaturedPost {...featuredPost} />
+                        </div>
+                    )}
+
+                    {/* Recent Items - 1x1 */}
+                    {recentPosts.slice(0, 4).map((post, index) => (
+                        <div 
+                            key={post.$id} 
+                            className={`rounded-3xl overflow-hidden glass-card animate-fade-in-up ${index === 0 || index === 3 ? 'md:col-span-1' : 'md:col-span-1'}`}
+                            style={{ animationDelay: `${index * 100}ms` }}
+                        >
+                             <PostCard authStatus={authStatus} authorName={post.authorName || 'Unknown'} {...post} />
+                        </div>
+                    ))}
+
+                    {/* Newsletter Callout - 2x1 */}
+                    <div className="md:col-span-2 rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-white/5 p-8 flex flex-col justify-center items-start relative group">
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                        <div className="relative z-10 max-w-lg">
+                            <h3 className="text-3xl font-heading font-bold text-white mb-2">Stay in the loop</h3>
+                            <p className="text-indigo-200 mb-6 font-light">Get the best stories delivered to your inbox weekly. No spam, ever.</p>
+                            <div className="flex gap-2 w-full items-center">
+                                <input type="email" placeholder="email@example.com" className="bg-white/10 border-white/10 text-white placeholder:text-white/60 rounded-full px-5 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary h-12" />
+                                <Button className="rounded-full bg-white hover:bg-slate-100 h-12 px-6 font-bold shadow-lg shrink-0" style={{ color: '#000000' }}>Join</Button>
                             </div>
                         </div>
                     </div>
-                </section>
-
-                {authStatus && featuredPost &&(
-                    <section className="container py-16">
-                        <h2 className="text-3xl font-bold tracking-tight mb-8 gradient-text">
-                            Featured Article
-                        </h2>
-                        <FeaturedPost {...featuredPost} />
-                    </section>
-                )}
-
-                {recentPosts.length > 0 && (
-                    <section className="container py-16">
-                        <h2 className="text-3xl font-bold tracking-tight mb-8 gradient-text">
-                            Recent Articles
-                        </h2>
-                        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            {recentPosts.map((post) => (
-                                <PostCard key={post.$id} {...post} />
-                            ))}
+                    
+                    {/* Remaining Items */}
+                    {recentPosts.slice(4).map((post, index) => (
+                        <div 
+                           key={post.$id} 
+                           className="rounded-3xl overflow-hidden glass-card animate-fade-in-up"
+                           style={{ animationDelay: `${(index + 4) * 100}ms` }}
+                        >
+                            <PostCard authStatus={authStatus} authorName={post.authorName || 'Unknown'} {...post} />
                         </div>
-                    </section>
-                )}
+                    ))}
+                </div>
 
-                <section className="bg-gradient-to-br from-background to-primary/10 py-16">
-                    <div className="container">
-                        <div className="text-center max-w-3xl mx-auto">
-                            <h2 className="text-3xl font-bold tracking-tight mb-6 gradient-text">
-                                Join Our Writing Community
-                            </h2>
-                            <p className="text-xl text-muted-foreground mb-8">
-                                Share your knowledge, gain insights, and connect with fellow writers and readers from around the world.
-                            </p>
-                            <Link to={authStatus ? "/add-post" : "/signup"}>
-                                <Button 
-                                    size="lg" 
-                                    className="font-medium px-8 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary/50"
-                                >
-                                    {authStatus ? "Start Writing" : "Get Started"}
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-            </main>
+            </div>
         </div>
     );
 }
