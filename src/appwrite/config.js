@@ -232,6 +232,9 @@ async getPublicPosts() {
 
             if (!response.ok) {
                 const err = await response.json().catch(() => ({}));
+                if (response.status === 429) {
+                    throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
+                }
                 throw new Error(err.error || `AI proxy returned ${response.status}`);
             }
 
@@ -267,6 +270,9 @@ async getPublicPosts() {
 
             if (!response.ok) {
                 const err = await response.json().catch(() => ({}));
+                if (response.status === 429) {
+                    throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
+                }
                 throw new Error(err.error || `AI proxy returned ${response.status}`);
             }
 

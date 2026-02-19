@@ -9,8 +9,8 @@ import { Label } from "../ui/label";
 import { Card, CardContent } from "../ui/card";
 import { RTE } from "../index";
 import PropTypes from 'prop-types';
-import AIGenerator from "./AIGenerator";
 import { toast } from 'react-toastify';
+import AIGenerator from "./AIGenerator";
 
 export default function PostForm({ post }) {
     const { register, handleSubmit, watch, setValue, control, getValues, formState: { errors, isSubmitting } } = useForm({
@@ -141,7 +141,6 @@ export default function PostForm({ post }) {
                     onClose={() => setShowAIGenerator(false)} 
                 />
             )}
-
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                      <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">

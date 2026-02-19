@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const model = process.env.PERPLEXITY_MODEL || 'sonar-pro';
 
     if (!apiKey) {
-        return res.status(500).json({ error: 'AI API key is not configured on the server.' });
+        return res.status(500).json({ error: 'Perplexity API key is not configured on the server.' });
     }
 
     try {
