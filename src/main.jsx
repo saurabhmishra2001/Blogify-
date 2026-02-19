@@ -9,8 +9,6 @@ import { AuthLayout } from './components'
 
 import { Home, Login, Signup, AllPosts, AddPost, EditPost, Post } from './pages'
 import ExplorePage from './components/explore/Explore.jsx';
-import NotFound from './pages/NotFound.jsx';
-import Profile from './components/Profile/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -70,21 +68,14 @@ const router = createBrowserRouter([
         },
         {
             path: "/explore",
-            element: <ExplorePage />,
-        },
-        {
-            path: "/profile",
             element: (
-                <AuthLayout authentication>
-                    {" "}
-                    <Profile />
-                </AuthLayout>
+                <ExplorePage />
             ),
         },
-        {
-            path: "*",
-            element: <NotFound />,
-        },
+        // {
+        //     path:"/read-more/:slug",
+        //     element:<ReadMore/>
+        // }
     ],
 },
 ])

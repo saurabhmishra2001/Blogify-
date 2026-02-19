@@ -198,10 +198,6 @@
   animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.animate-fade-in {
-  animation: fade-in-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
 .animate-gradient-x {
   animation: gradient-x 10s ease infinite;
 }
