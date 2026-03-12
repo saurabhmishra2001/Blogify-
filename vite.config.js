@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
                   const dataRaw = JSON.parse(body || '{}');
                   
                   // 1. Try Groq First
-                  const groqKey = env.VITE_GROQ_API_KEY || env.GROQ_API_KEY || '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';
+                  const groqKey = env.VITE_GROQ_API_KEY || env.GROQ_API_KEY || '';
                   const apiKey = groqKey.replace(/['"]/g, '').trim();
                   
                   const rawModel = env.VITE_GROQ_MODEL || env.GROQ_MODEL || 'llama-3.3-70b-versatile';
@@ -53,7 +53,7 @@ export default defineConfig(({ mode }) => {
                   if (!response || !response.ok) {
                     console.log(`Groq failed (Status: ${response ? response.status : 'Network Error'})... falling back to Hugging Face!`);
                     
-                    const hfKey = env.VITE_HF_API_KEY || env.HF_API_KEY || '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';
+                    const hfKey = env.VITE_HF_API_KEY || env.HF_API_KEY || '';
                     const hfApiKey = hfKey.replace(/['"]/g, '').trim();
                     const hfModel = env.VITE_HF_MODEL || env.HF_MODEL || 'mistralai/Mixtral-8x7B-Instruct-v0.1';
                     

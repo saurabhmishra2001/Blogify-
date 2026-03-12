@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         }
 
         // 1. Try Groq First
-        const groqKey = process.env.VITE_GROQ_API_KEY || process.env.GROQ_API_KEY || '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';
+        const groqKey = process.env.VITE_GROQ_API_KEY || process.env.GROQ_API_KEY || '';
         const apiKey = groqKey.replace(/['"]/g, '').trim();
         
         const rawModel = process.env.VITE_GROQ_MODEL || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         if (!response || !response.ok) {
           console.log(`Groq failed (Status: ${response ? response.status : 'Network Error'})... falling back to Hugging Face!`);
           
-          const hfKey = process.env.VITE_HF_API_KEY || process.env.HF_API_KEY || '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';
+          const hfKey = process.env.VITE_HF_API_KEY || process.env.HF_API_KEY || '';
           const hfApiKey = hfKey.replace(/['"]/g, '').trim();
           const hfModel = process.env.VITE_HF_MODEL || process.env.HF_MODEL || 'mistralai/Mixtral-8x7B-Instruct-v0.1';
           
