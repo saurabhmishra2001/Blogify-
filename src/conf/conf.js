@@ -6,10 +6,9 @@ const conf = {
     appwriteBucketId : String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
     editorApi : String(import.meta.env.VITE_TINY_EDITOR_API),
 
-    // AI calls are proxied through /api/ai (Vercel serverless function).
-    // The actual Perplexity API key lives ONLY in Vercel environment variables (server-side).
-    // We do NOT expose VITE_PERPLEXITY_API_KEY here anymore.
-    aiProxyEndpoint: '/api/ai',
+    // AI Configuration - Point to the local/server proxy to avoid CORS errors
+    aiApiEndpoint: '/api/ai',
+    aiModel: String(import.meta.env.VITE_PERPLEXITY_MODEL || 'sonar-pro'),
 }
 
 export default conf;

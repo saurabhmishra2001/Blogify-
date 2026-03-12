@@ -8,15 +8,11 @@ import { useSelector } from "react-redux";
 import { LikeBtn } from "../components";
 import { toast } from 'react-toastify';
 import { Badge } from "../components/ui/badge";
-import ReadingProgress from "../components/ReadingProgress";
-import BackToTop from "../components/BackToTop";
-import DeleteConfirmModal from "../components/DeleteConfirmModal";
 
 export default function Post() {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [imageError, setImageError] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const { slug } = useParams();
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
@@ -40,14 +36,15 @@ export default function Post() {
     }, [slug, navigate]);
 
     const deletePost = () => {
-        appwriteService.deletePost(post.$id).then((status) => {
-            if (status) {
-                appwriteService.deleteFile(post.featuredImage);
-                toast.success("Post deleted successfully");
-                navigate("/");
-            }
-        });
-        setShowDeleteModal(false);
+        if (window.confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+            appwriteService.deletePost(post.$id).then((status) => {
+                if (status) {
+                    appwriteService.deleteFile(post.featuredImage);
+                    toast.success("Post deleted successfully");
+                    navigate("/");
+                }
+            });
+        }
     };
 
     const handleShare = () => {
@@ -87,13 +84,6 @@ export default function Post() {
 
     return (
         <div className="min-h-screen pb-20 animate-fade-in bg-background">
-            <ReadingProgress />
-            <BackToTop />
-            <DeleteConfirmModal
-                isOpen={showDeleteModal}
-                onConfirm={deletePost}
-                onCancel={() => setShowDeleteModal(false)}
-            />
             
             {/* Immersive Hero Section */}
             <div className="relative w-full h-[70vh] min-h-[600px] flex items-end justify-center">
@@ -180,7 +170,7 @@ export default function Post() {
                                     variant="ghost" 
                                     size="sm" 
                                     className="rounded-full text-red-400 hover:text-red-300 hover:bg-red-950/30"
-                                    onClick={() => setShowDeleteModal(true)}
+                                    onClick={deletePost}
                                 >
                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                     Delete
