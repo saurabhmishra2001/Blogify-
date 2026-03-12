@@ -116,7 +116,7 @@ export default function AIGenerator({ onGenerate, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-            <Card className="w-full max-w-2xl mx-4 shadow-2xl animate-scale-in border-primary/20">
+            <Card className="w-[95%] sm:w-full max-w-2xl mx-auto shadow-2xl animate-scale-in border-primary/20 max-h-[90vh] overflow-y-auto">
                 <CardHeader className="relative border-b bg-muted/30">
                     <CardTitle className="text-2xl gradient-text">AI Blog Assistant</CardTitle>
                     <CardDescription>Generate engaging content + a featured image in seconds.</CardDescription>
@@ -133,19 +133,19 @@ export default function AIGenerator({ onGenerate, onClose }) {
                     {/* Topic Section */}
                     <div className="space-y-4">
                         <Label>What do you want to write about?</Label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                             <Input 
                                 placeholder="E.g., Future of Remote Work, Healthy Eating Habits..." 
                                 value={topic}
                                 onChange={(e) => setTopic(e.target.value)}
-                                className="text-lg"
+                                className="text-lg w-full"
                                 onKeyDown={(e) => e.key === 'Enter' && handleGenerateTopics()}
                             />
                             <Button 
                                 variant="outline" 
                                 onClick={handleGenerateTopics}
                                 disabled={!topic || isGeneratingTopics}
-                                className="min-w-[140px]"
+                                className="min-w-[140px] w-full sm:w-auto"
                             >
                                 {isGeneratingTopics ? (
                                     <span className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function AIGenerator({ onGenerate, onClose }) {
                         )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div className="space-y-2">
                             <Label>Tone</Label>
                             <select 
