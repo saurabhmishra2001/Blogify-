@@ -1,3 +1,4 @@
+
 // This file is used to configure the appwrite client and services
 
 import conf from "../conf/conf";
@@ -211,89 +212,59 @@ async getPublicPosts() {
         try {
             const prompt = `Write a ${length} blog post about "${topic}" in a ${tone} tone.`;
 
-            // Call our Vercel serverless proxy — no API key exposed to browser, no CORS issues
-            const response = await fetch(conf.aiProxyEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages: [
-                        {
-                            role: 'system',
-                            content: `You are a professional blog writer. Generate a structured blog post in HTML format.
-                            Use <h1> for the main title, <h2> for subheadings, <p> for paragraphs, and <ul>/<li> for lists.
-                            Do not wrap the output in markdown code blocks or \`\`\`html. Return only the raw HTML content.
-                            Make sure the generated content matches the requested tone: ${tone}.`
-                        },
-                        { role: 'user', content: prompt }
-                    ],
-                    max_tokens: length === 'short' ? 500 : (length === 'long' ? 2000 : 1000),
-                }),
+            // Call the local/server proxy to avoid CORS and hide the API key
+            const response = await axios.post(conf.aiApiEndpoint, {
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a professional blog writer. Generate a structured blog post in HTML format. 
+                        Use <h1> for the main title, <h2> for subheadings, <p> for paragraphs, and <ul>/<li> for lists.
+                        Do not wrap the output in markdown code blocks or \`\`\`html. Return only the raw HTML content.
+                        Make sure the generated content matches the requested tone: ${tone}.`
+                    },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ],
+                max_tokens: length === 'short' ? 500 : (length === 'long' ? 2000 : 1000), 
             });
 
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                if (response.status === 429) {
-                    throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
-                }
-                throw new Error(err.error || `AI proxy returned ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.choices[0].message.content;
+            return response.data.choices[0].message.content; 
 
         } catch (error) {
-            console.error('Error generating AI content:', error);
-            return '<p>Failed to generate content from AI service. Please try again later.</p>';
+            console.error("Error generating AI content:", error);
+            return "<p>Failed to generate content from AI service. Please check your API configuration.</p>";
         }
     }
 
-    async generateAITopics(baseTopic = 'latest technology trends') {
+    async generateAITopics(baseTopic = "latest technology trends") {
         try {
-            // Call our Vercel serverless proxy — no API key exposed to browser, no CORS issues
-            const response = await fetch(conf.aiProxyEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messages: [
-                        {
-                            role: 'system',
-                            content: "You are a creative blog topic generator. Return a JSON array of 5 catchy blog post titles based on the user's input. Return ONLY the JSON array, no extra text or markdown."
-                        },
-                        {
-                            role: 'user',
-                            content: `Suggest 5 catchy blog post titles related to: ${baseTopic}`
-                        }
-                    ],
-                    max_tokens: 300,
-                }),
+            const response = await axios.post(conf.aiApiEndpoint, {
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are a creative blog topic generator. Return a JSON array of 5 catchy blog post titles based on the user's input. Return ONLY the JSON array strings, no extra text."
+                    },
+                    {
+                        role: "user",
+                        content: `Suggest 5 catchy blog post titles related to: ${baseTopic}`
+                    }
+                ],
+                max_tokens: 300, 
             });
 
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                if (response.status === 429) {
-                    throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
-                }
-                throw new Error(err.error || `AI proxy returned ${response.status}`);
-            }
-
-            const data = await response.json();
-            let content = data.choices[0].message.content;
-
-            // Clean markdown code blocks if the model wraps in them
+            let content = response.data.choices[0].message.content;
             content = content.replace(/```json/g, '').replace(/```/g, '').trim();
-
+            
             try {
                 return JSON.parse(content);
             } catch (e) {
-                // Fallback: split by newlines
-                return content
-                    .split('\n')
-                    .filter(line => line.trim().length > 0)
-                    .map(line => line.replace(/^\d+\.\s*/, '').replace(/"/g, ''));
+                return content.split('\n').filter(line => line.trim().length > 0).map(line => line.replace(/^\d+\.\s*/, '').replace(/"/g, ''));
             }
 
         } catch (error) {
-            console.error('Error generating AI topics:', error);
+            console.error("Error generating AI topics:", error);
             return [];
         }
     }
