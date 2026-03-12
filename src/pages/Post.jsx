@@ -47,9 +47,27 @@ export default function Post() {
         }
     };
 
-    const handleShare = () => {
-        navigator.clipboard.writeText(window.location.href);
-        toast.success("Link copied to clipboard!");
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: post.title,
+                    text: 'Check out this article on Blogify!',
+                    url: window.location.href,
+                });
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error("Error sharing:", err);
+                }
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                toast.success("Link copied to clipboard!");
+            } catch (err) {
+                toast.error("Failed to copy link");
+            }
+        }
     };
 
     if (loading) {
@@ -146,34 +164,34 @@ export default function Post() {
             <div className="container mx-auto max-w-3xl px-4 md:px-6 relative z-20">
                 
                 {/* Sticky Action Bar */}
-                <div className="sticky top-24 z-50 -mt-8 mb-12 flex justify-center pointer-events-none">
-                    <div className="glass rounded-full p-2 px-4 flex items-center gap-2 shadow-2xl animate-fade-in-up pointer-events-auto border-white/10 scale-90 md:scale-100 origin-top">
+                <div className="sticky top-24 z-50 -mt-8 mb-12 flex justify-center pointer-events-none px-2">
+                    <div className="glass rounded-full p-2 px-2 sm:px-4 flex items-center gap-1 sm:gap-2 shadow-2xl animate-fade-in-up pointer-events-auto border-white/10 scale-85 sm:scale-95 md:scale-100 origin-top overflow-x-auto no-scrollbar max-w-full">
                         <div className="px-2">
                              <LikeBtn postId={post.$id} />
                         </div>
                         <div className="w-px h-6 bg-white/10 mx-1"></div>
-                        <Button variant="ghost" size="sm" onClick={handleShare} className="rounded-full text-slate-400 hover:text-white hover:bg-white/10">
-                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-                             Share
+                        <Button variant="ghost" size="sm" onClick={handleShare} className="rounded-full text-slate-400 hover:text-white hover:bg-white/10 px-2 sm:px-3">
+                             <svg className="w-4 h-4 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                             <span className="hidden sm:inline">Share</span>
                         </Button>
                         
                         {isAuthor && (
                             <>
                                 <div className="w-px h-6 bg-white/10 mx-1"></div>
                                 <Link to={`/edit-post/${post.$id}`}>
-                                    <Button variant="ghost" size="sm" className="rounded-full text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/30">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                                        Edit
+                                    <Button variant="ghost" size="sm" className="rounded-full text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/30 px-2 sm:px-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:mr-2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                        <span className="hidden sm:inline">Edit</span>
                                     </Button>
                                 </Link>
                                 <Button 
                                     variant="ghost" 
                                     size="sm" 
-                                    className="rounded-full text-red-400 hover:text-red-300 hover:bg-red-950/30"
+                                    className="rounded-full text-red-400 hover:text-red-300 hover:bg-red-950/30 px-2 sm:px-3"
                                     onClick={deletePost}
                                 >
-                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    Delete
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:mr-2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    <span className="hidden sm:inline">Delete</span>
                                 </Button>
                             </>
                         )}
@@ -202,9 +220,9 @@ export default function Post() {
                         <p className="text-slate-400 mb-6">
                             Subscribe to get the latest posts from {post.authorName || 'the author'} delivered right to your inbox.
                         </p>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                              <input type="email" placeholder="Your email address" className="bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-full px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary" />
-                             <Button className="rounded-full bg-primary hover:bg-primary/90 text-white">Subscribe</Button>
+                             <Button className="rounded-full bg-primary hover:bg-primary/90 text-white w-full sm:w-auto">Subscribe</Button>
                         </div>
                     </div>
                     
